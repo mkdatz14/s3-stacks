@@ -7,6 +7,7 @@ variable "aws_region" {
 variable "access_key" {
   description = "AWS access key from the HCP Terraform variable set."
   type        = string
+  sensitive   = true
   ephemeral   = true
 }
 
