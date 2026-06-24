@@ -28,6 +28,17 @@ locals {
   generated_bucket_name = lower("${var.project}-${var.environment}-${var.bucket_purpose}-${random_id.bucket_suffix.hex}")
   bucket_name           = var.bucket_name_override != "" ? var.bucket_name_override : local.generated_bucket_name
 
+  lifecycle_rules = [
+    for rule in var.lifecycle_rules : merge(
+      {
+        id      = rule.id
+        enabled = rule.enabled
+      },
+      try(rule.expiration, null) != null ? { expiration = rule.expiration } : {},
+      try(rule.transition, null) != null ? { transition = rule.transition } : {}
+    )
+  ]
+
   tags = merge(
     var.tags,
     {
@@ -67,7 +78,7 @@ module "bucket" {
     }
   }
 
-  lifecycle_rule = var.lifecycle_rules
+  lifecycle_rule = local.lifecycle_rules
 
   tags = local.tags
 }
