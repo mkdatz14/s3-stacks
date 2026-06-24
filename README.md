@@ -50,9 +50,24 @@ Custom deployment groups and deployment-group auto-approval are intentionally om
 Stacks run in HCP Terraform. To deploy:
 
 1. Create a Stack in your HCP Terraform organization and connect it to this repository.
-2. Provide AWS credentials through a secure HCP Terraform variable set or Stack environment variables.
-3. HCP Terraform reads `components.tfcomponent.hcl` and `deployments.tfdeploy.hcl` to plan each S3 bucket deployment.
-4. Review and approve the plans for each deployment.
+2. Create an HCP Terraform variable set named `s3-stacks-aws-credentials` with access to the Stack's project.
+3. Add these environment variables to the variable set:
+   - `AWS_ACCESS_KEY_ID` - sensitive
+   - `AWS_SECRET_ACCESS_KEY` - sensitive
+  - `AWS_SESSION_TOKEN` - sensitive
+4. HCP Terraform reads `components.tfcomponent.hcl` and `deployments.tfdeploy.hcl` to plan each S3 bucket deployment.
+5. Review and approve the plans for each deployment.
+
+The Stack reads that variable set with this deployment store:
+
+```hcl
+store "varset" "aws_credentials" {
+  name     = "s3-stacks-aws-credentials"
+  category = "env"
+}
+```
+
+Each deployment passes `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` into ephemeral Stack variables, and the AWS provider uses those values directly. The secrets are not written into deployment state.
 
 ## Adding An Environment
 
@@ -61,6 +76,10 @@ To add another bucket deployment, append a deployment block:
 ```hcl
 deployment "qa-1" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "qa-1"
     bucket_purpose     = "app-logs"

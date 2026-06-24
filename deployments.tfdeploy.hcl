@@ -1,8 +1,17 @@
 # Each deployment is an independent instance of the Stack with its own state.
 # These mirror the nine S3 workspaces in s3-example-app.
 
+store "varset" "aws_credentials" {
+  name     = "s3-stacks-aws-credentials"
+  category = "env"
+}
+
 deployment "dev-1" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "dev-1"
     bucket_purpose     = "app-logs"
@@ -30,6 +39,10 @@ deployment "dev-1" {
 
 deployment "dev-2" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-east-1"
     environment        = "dev-2"
     bucket_purpose     = "assets"
@@ -57,6 +70,10 @@ deployment "dev-2" {
 
 deployment "dev-3" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "dev-3"
     bucket_purpose     = "reports"
@@ -84,6 +101,10 @@ deployment "dev-3" {
 
 deployment "staging-1" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "staging-1"
     bucket_purpose     = "app-logs"
@@ -117,6 +138,10 @@ deployment "staging-1" {
 
 deployment "staging-2" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-east-1"
     environment        = "staging-2"
     bucket_purpose     = "assets"
@@ -147,6 +172,10 @@ deployment "staging-2" {
 
 deployment "staging-3" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "staging-3"
     bucket_purpose     = "reports"
@@ -174,6 +203,10 @@ deployment "staging-3" {
 
 deployment "prod-1" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "prod-1"
     bucket_purpose     = "app-logs"
@@ -204,6 +237,10 @@ deployment "prod-1" {
 
 deployment "prod-2" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-east-1"
     environment        = "prod-2"
     bucket_purpose     = "assets"
@@ -234,6 +271,10 @@ deployment "prod-2" {
 
 deployment "prod-3" {
   inputs = {
+    access_key    = store.varset.aws_credentials.AWS_ACCESS_KEY_ID
+    secret_key    = store.varset.aws_credentials.AWS_SECRET_ACCESS_KEY
+    session_token = store.varset.aws_credentials.AWS_SESSION_TOKEN
+
     aws_region         = "us-west-2"
     environment        = "prod-3"
     bucket_purpose     = "reports"

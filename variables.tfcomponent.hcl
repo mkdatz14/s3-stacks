@@ -4,6 +4,26 @@ variable "aws_region" {
   default     = "us-west-2"
 }
 
+variable "access_key" {
+  description = "AWS access key from the HCP Terraform variable set."
+  type        = string
+  ephemeral   = true
+}
+
+variable "secret_key" {
+  description = "AWS secret access key from the HCP Terraform variable set."
+  type        = string
+  sensitive   = true
+  ephemeral   = true
+}
+
+variable "session_token" {
+  description = "AWS session token from the HCP Terraform variable set."
+  type        = string
+  sensitive   = true
+  ephemeral   = true
+}
+
 variable "project" {
   description = "Project identifier used for bucket naming and tags."
   type        = string
