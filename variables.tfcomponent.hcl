@@ -52,8 +52,18 @@ variable "bucket_key_enabled" {
 
 variable "lifecycle_rules" {
   description = "Lifecycle rules passed to the S3 bucket module."
-  type        = any
-  default     = []
+  type = list(object({
+    id      = string
+    enabled = bool
+    expiration = optional(object({
+      days = number
+    }))
+    transition = optional(list(object({
+      days          = number
+      storage_class = string
+    })))
+  }))
+  default = []
 }
 
 variable "tags" {
