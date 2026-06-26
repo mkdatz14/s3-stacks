@@ -2,7 +2,7 @@
 
 This repository takes the S3 workload from `s3-example-app` and models it as a single [Terraform Stack](https://developer.hashicorp.com/terraform/language/stacks).
 
-The workspace-based S3 example creates one HCP Terraform workspace per bucket under `envs/`. This Stack keeps one component definition and fans it out into nine deployments from `deployments.tfdeploy.hcl`.
+The workspace-based S3 example creates one HCP Terraform workspace per bucket under `envs/`. This Stack keeps one component definition and separates it out into nine deployments from `deployments.tfdeploy.hcl`.
 
 ## File Layout
 
@@ -16,7 +16,7 @@ The workspace-based S3 example creates one HCP Terraform workspace per bucket un
 
 ## Component
 
-The `s3_bucket` component uses the same implementation pattern as `s3-example-app/shared`:
+The `s3_bucket` component uses the same implementation as the `s3-example-app` repository:
 
 - `random_id` adds a stable suffix to generated bucket names.
 - Bucket names are generated from project, environment, purpose, and suffix unless `bucket_name_override` is set.
@@ -25,11 +25,11 @@ The `s3_bucket` component uses the same implementation pattern as `s3-example-ap
 - Server-side encryption and lifecycle rules are passed through as inputs.
 - Standard tags are merged with deployment-specific tags.
 
-The default project prefix is `s3-stacks`, so generated bucket names are separate from the `s3-example-app` workspace demo.
+The default project prefix is `s3-stacks`, so generated bucket names are separate from other s3 project demos.
 
 ## Deployments
 
-Each deployment has its own state and its own AWS region, purpose, lifecycle rules, and tags.
+Each deployment has its own state and its own AWS region, purpose, lifecycle rules, and tags according to its deployment.
 
 | Deployment | Region | Purpose | Force destroy | Versioning |
 | --- | --- | --- | --- | --- |
@@ -58,7 +58,7 @@ Stacks run in HCP Terraform. To deploy:
 4. HCP Terraform reads `components.tfcomponent.hcl` and `deployments.tfdeploy.hcl` to plan each S3 bucket deployment.
 5. Review and approve the plans for each deployment.
 
-The Stack reads that variable set with this deployment store:
+The Stack reads that variable set with this config:
 
 ```hcl
 store "varset" "aws_credentials" {
@@ -67,7 +67,7 @@ store "varset" "aws_credentials" {
 }
 ```
 
-Each deployment passes `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` into ephemeral Stack variables, and the AWS provider uses those values directly. The secrets are not written into deployment state.
+Each deployment passes `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` into Stack variables, and the AWS provider uses those values directly. The secrets are not written into deployment state.
 
 ## Adding An Environment
 
@@ -96,4 +96,4 @@ deployment "qa-1" {
 }
 ```
 
-No new workspace or component wiring is required. The existing S3 component is reused for the new deployment.
+No new workspace or additional wiring is required. The existing S3 component is reused for the new deployment.
