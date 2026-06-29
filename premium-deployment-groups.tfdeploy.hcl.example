@@ -1,0 +1,138 @@
+# Optional HCP Terraform Premium example.
+#
+# Copy these blocks into deployments.tfdeploy.hcl to define custom deployment
+# groups and auto-approval checks. Then add the deployment_group assignment
+# shown at the bottom of this file to each matching deployment block.
+#
+# HCP Terraform currently supports one deployment per deployment group.
+
+deployment_auto_approve "successful_plan" {
+  check {
+    condition = context.success == true
+    reason    = "The plan failed and requires manual review."
+  }
+}
+
+deployment_auto_approve "no_resource_deletes" {
+  check {
+    condition = context.plan.changes.remove == 0
+    reason    = "Plan removes ${context.plan.changes.remove} resources."
+  }
+}
+
+deployment_auto_approve "no_changes" {
+  check {
+    condition = context.plan.changes.total == 0
+    reason    = "Plan contains ${context.plan.changes.total} changes."
+  }
+}
+
+deployment_group "dev_1" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "dev_2" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "dev_3" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "staging_1" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "staging_2" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "staging_3" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_resource_deletes,
+  ]
+}
+
+deployment_group "prod_1" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_changes,
+  ]
+}
+
+deployment_group "prod_2" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_changes,
+  ]
+}
+
+deployment_group "prod_3" {
+  auto_approve_checks = [
+    deployment_auto_approve.successful_plan,
+    deployment_auto_approve.no_changes,
+  ]
+}
+
+# Add these assignments inside the matching deployment blocks, next to inputs:
+#
+# deployment "dev-1" {
+#   deployment_group = deployment_group.dev_1
+#   inputs = { ... }
+# }
+#
+# deployment "dev-2" {
+#   deployment_group = deployment_group.dev_2
+#   inputs = { ... }
+# }
+#
+# deployment "dev-3" {
+#   deployment_group = deployment_group.dev_3
+#   inputs = { ... }
+# }
+#
+# deployment "staging-1" {
+#   deployment_group = deployment_group.staging_1
+#   inputs = { ... }
+# }
+#
+# deployment "staging-2" {
+#   deployment_group = deployment_group.staging_2
+#   inputs = { ... }
+# }
+#
+# deployment "staging-3" {
+#   deployment_group = deployment_group.staging_3
+#   inputs = { ... }
+# }
+#
+# deployment "prod-1" {
+#   deployment_group = deployment_group.prod_1
+#   inputs = { ... }
+# }
+#
+# deployment "prod-2" {
+#   deployment_group = deployment_group.prod_2
+#   inputs = { ... }
+# }
+#
+# deployment "prod-3" {
+#   deployment_group = deployment_group.prod_3
+#   inputs = { ... }
+# }

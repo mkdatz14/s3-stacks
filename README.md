@@ -12,6 +12,7 @@ The workspace-based S3 example creates one HCP Terraform workspace per bucket un
 | `variables.tfcomponent.hcl` | Stack-level inputs for region, bucket naming, lifecycle rules, encryption, and tags. |
 | `outputs.tfcomponent.hcl` | Exposes bucket name, ARN, region, and regional domain name for each deployment. |
 | `deployments.tfdeploy.hcl` | Declares the nine S3 bucket deployments that mirror `s3-example-app`. |
+| `premium-deployment-groups.tfdeploy.hcl.example` | Optional HCP Terraform Plus example showing custom deployment groups and auto-approval checks. |
 | `modules/s3_bucket/` | Local wrapper around `terraform-aws-modules/s3-bucket/aws` version `5.14.1`. |
 
 ## Component
@@ -43,7 +44,17 @@ Each deployment has its own state and its own AWS region, purpose, lifecycle rul
 | `prod-2` | `us-east-1` | `assets` | `false` | `true` |
 | `prod-3` | `us-west-2` | `reports` | `false` | `true` |
 
-Custom deployment groups and deployment-group auto-approval are intentionally omitted so this example works without an HCP Terraform Premium subscription.
+The default deployment file omits custom deployment groups so this example works without an HCP Terraform Premium subscription. To show the Premium-only orchestration model, [premium-deployment-groups.tfdeploy.hcl.example](premium-deployment-groups.tfdeploy.hcl.example) includes custom deployment groups and auto-approval checks for successful non-destructive dev and staging plans and no-change prod plans.
+
+## Premium Deployment Groups
+
+HCP Terraform Premium supports deployment group rules for Stacks. The optional example shows:
+
+- `successful_plan`: auto-approval can only continue when planning succeeds.
+- `no_resource_deletes`: dev and staging plans can be auto-approved when they do not remove resources.
+- `no_changes`: prod plans can be auto-approved only when the plan is successful and has no changes.
+
+Because HCP Terraform currently only supports one deployment per deployment group, the example creates one group per deployment, such as `dev_1`, `staging_1`, and `prod_1`. Copy the example blocks into your `deployments.tfdeploy.hcl` file, then add the matching `deployment_group = deployment_group.<name>` assignment inside each deployment block to use the Premium features.
 
 ## Usage
 
